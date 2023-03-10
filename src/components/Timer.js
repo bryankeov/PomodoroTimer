@@ -4,14 +4,24 @@ import "react-circular-progressbar/dist/styles.css";
 import "./Timer.css";
 
 function Timer() {
-  const [timer, setTimer] = useState(1500);
+  const [timer, setTimer] = useState(10);
 
   function startTimer() {
-    const interval = setInterval(() => {
+    setInterval(() => {
       setTimer((timer) => timer - 1);
     }, 1000);
     setTimer(timer);
   }
+
+  // useEffect(() => {
+  //   if (timer === 0) {
+  //     clearInterval(timer);
+  //   }
+  // }, [timer]);
+
+  useEffect(() => {
+    return () => clearInterval(timer);
+  }, [timer]);
 
   return (
     <div className="timer-container">
