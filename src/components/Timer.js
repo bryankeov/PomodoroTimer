@@ -4,57 +4,52 @@ import "react-circular-progressbar/dist/styles.css";
 import "./Timer.css";
 
 function Timer() {
-  const [onWork, setOnWork] = useState(60);
-  const [onBreak, setOnBreak] = useState(15);
+  // const [onWork, setOnWork] = useState(60);
+  // const [onBreak, setOnBreak] = useState(15);
+  const [minutes, setMinutes] = useState(1);
+  const [seconds, setSeconds] = useState(0);
+  const [onBreak, setOnBreak] = useState(false);
+
+  const timerMin = String(minutes).padStart(2, "0");
+  const timerSec = String(seconds).padStart(2, "0");
 
   function handleStart() {
-    if (onWork > 0) {
-      setInterval(() => {
-        setOnWork((onWork) => onWork - 1);
-      }, 1000);
-      setOnWork(onWork);
-    } else if (onWork <= 0) {
-      setInterval(() => {
-        setOnBreak((onBreak) => onBreak - 1);
-      }, 1000);
-      setOnBreak(onBreak);
-    }
+    clearInterval();
   }
 
   useEffect(() => {
-    if (onWork <= 0) {
-      clearInterval(onWork);
-      setOnBreak(15);
-      alert("Press Start to begin your break");
-    }
-  }, [onWork]);
+    let interval = setInterval(() => {
+      clearInterval(interval);
+      if (seconds === 0) {
+        if (minutes !== 0) {
+          setSeconds(59);
+          setMinutes(minutes - 1);
+        } else {
+          setMinutes(onBreak ? 24 : 4);
+          setSeconds(59);
+          setOnBreak(!onBreak);
+        }
+      } else {
+        setSeconds(seconds - 1);
+      }
+    }, 1000);
+  }, [seconds]);
 
-  useEffect(() => {
-    if (onBreak <= 0) {
-      clearInterval(onBreak);
-      setOnWork(60);
-    }
-  }, [onBreak]);
-
-  useEffect(() => {
-    return () => clearInterval(onWork);
-  }, [onWork]);
-
-  useEffect(() => {
-    return () => clearInterval(onBreak);
-  }, [onBreak]);
+  console.log(`${timerMin}.${timerSec}`);
 
   return (
     <div className="timer-container">
       <button type="button" onClick={handleStart}>
-        Press Me
+        Start
       </button>
       <div className="bar-container">
-        <h4>{onWork <= 0 ? "Break Time" : "Work Time"}</h4>
+        <h3>
+          {!onBreak ? "Work time!" : "Time for a break, go stretch your legs!"}
+        </h3>
         <CircularProgressbar
-          value={onWork <= 0 ? onBreak : onWork}
-          maxValue={1500}
-          text={onWork <= 0 ? onBreak : onWork}
+          value={`${timerMin}.${timerSec}`}
+          maxValue={!onBreak ? 25 : 5}
+          text={`${timerMin}:${timerSec}`}
           styles={buildStyles({
             pathColor: `#FF6347`,
             textColor: `#FF6347`,
