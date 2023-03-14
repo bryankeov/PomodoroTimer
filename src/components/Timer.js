@@ -4,38 +4,37 @@ import "react-circular-progressbar/dist/styles.css";
 import "./Timer.css";
 
 function Timer() {
-  // const [onWork, setOnWork] = useState(60);
-  // const [onBreak, setOnBreak] = useState(15);
   const [minutes, setMinutes] = useState(1);
   const [seconds, setSeconds] = useState(0);
   const [onBreak, setOnBreak] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
 
   const timerMin = String(minutes).padStart(2, "0");
   const timerSec = String(seconds).padStart(2, "0");
 
   function handleStart() {
-    clearInterval();
+    setIsStarted(!isStarted);
   }
 
   useEffect(() => {
     let interval = setInterval(() => {
       clearInterval(interval);
-      if (seconds === 0) {
-        if (minutes !== 0) {
-          setSeconds(59);
-          setMinutes(minutes - 1);
+      if (isStarted === true) {
+        if (seconds === 0) {
+          if (minutes !== 0) {
+            setSeconds(59);
+            setMinutes(minutes - 1);
+          } else {
+            setMinutes(onBreak ? 24 : 4);
+            setSeconds(59);
+            setOnBreak(!onBreak);
+          }
         } else {
-          setMinutes(onBreak ? 24 : 4);
-          setSeconds(59);
-          setOnBreak(!onBreak);
+          setSeconds(seconds - 1);
         }
-      } else {
-        setSeconds(seconds - 1);
       }
     }, 1000);
-  }, [seconds]);
-
-  console.log(`${timerMin}.${timerSec}`);
+  }, [seconds, isStarted]);
 
   return (
     <div className="timer-container">
