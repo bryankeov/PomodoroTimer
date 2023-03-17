@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import "./Timer.css";
+import PlayIcon from "@mui/icons-material/PlayCircleFilledRounded";
+import PauseIcon from "@mui/icons-material/PauseCircleFilledRounded";
 
 function Timer() {
-  const [minutes, setMinutes] = useState(1);
+  const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
   const [onBreak, setOnBreak] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
@@ -38,9 +40,19 @@ function Timer() {
 
   return (
     <div className="timer-container">
-      <button type="button" onClick={handleStart}>
-        Start
-      </button>
+      {!isStarted ? (
+        <PlayIcon
+          className="icon-buttons"
+          onClick={handleStart}
+          fontSize="large"
+        />
+      ) : (
+        <PauseIcon
+          className="icon-buttons"
+          onClick={handleStart}
+          fontSize="large"
+        />
+      )}
       <div className="bar-container">
         <h3>
           {!onBreak ? "Work time!" : "Time for a break, go stretch your legs!"}
